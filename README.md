@@ -32,10 +32,7 @@ All assets and logic are contained in a single source file:
 
 ## Building
 Compile the project using your Raylib setup. An example command for GCC: \
-```gcc pong.c -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -o pong```
-
-On Windows with MinGW, it may look like: \
-```gcc pong.c -o pong.exe -lraylib -lopengl32 -lgdi32 -lwinmm```
+```gcc src/pong.c -o pong.exe -lraylib -lopengl32 -lgdi32 -lwinmm```
 
 Adjust paths and libraries depending on your environment.
 
