@@ -38,6 +38,7 @@ int main(){
     
     InitWindow(screenWidth, screenHeight, "Project: Pong");
     InitAudioDevice();
+    // SetWindowState(FLAG_WINDOW_UNDECORATED);
     
     GameScreen screen = title;
     
@@ -269,6 +270,12 @@ int main(){
                         // Collision logic: ball vs screen-limits
                         if ((ball.position.y - ball.radius) <= 0 || (ball.position.y + ball.radius) >= screenHeight){
                             ball.speed.y *= -1;
+                            if(ball.position.y - ball.radius <= 0){
+                                ball.position.y = ball.radius + 1.0f; // clamp inside
+                            }
+                            if(ball.position.y + ball.radius >= screenHeight){
+                                ball.position.y = screenHeight - ball.radius - 1.0f; // clamp inside
+                            }
                             // effect logic
                             if(ball.speed.x > 0) effect.colorindex = p1color_index;
                             if(ball.speed.x < 0) effect.colorindex = p2color_index;
@@ -285,15 +292,26 @@ int main(){
                             effectStarted = 0;
                         }
                         
-                        // Collision logic: ball vs player
-                        if (CheckCollisionCircleRec( ball.position, ball.radius, player1.bounds)){
+                        // Collision logic: ball vs players
+                        if( (ball.speed.x < 0) && 
+                            (ball.position.x - ball.radius <= player1.position.x + player1.size.x) &&
+                            (ball.position.x > player1.position.x) &&
+                            (ball.position.y + ball.radius >= player1.position.y) &&
+                            (ball.position.y - ball.radius <= player1.position.y + player1.size.y) ){
                             ball.speed.x *= -1.03;
-                            ball.speed.y = (ball.position.y - (player1.position.y + player1.size.y/2))/player1.size.y*5.0f;
+                            ball.position.x = player1.position.x + player1.size.x + ball.radius + 1.0f; // clamp inside
+                            ball.speed.y = (ball.position.y - (player1.position.y + player1.size.y/2))/player1.size.y * 5.0f;
                         }
-                        if (CheckCollisionCircleRec( ball.position, ball.radius, player2.bounds)){
+                        if( (ball.speed.x > 0) && 
+                            (ball.position.x + ball.radius >= player2.position.x) &&
+                            (ball.position.x < player2.position.x) &&
+                            (ball.position.y + ball.radius >= player2.position.y) &&
+                            (ball.position.y - ball.radius <= player2.position.y + player2.size.y) ){
                             ball.speed.x *= -1.03;
-                            ball.speed.y = (ball.position.y - (player2.position.y + player2.size.y/2))/player2.size.y*5.0f;
+                            ball.position.x = player2.position.x - ball.radius - 1.0f; // clamp inside
+                            ball.speed.y = (ball.position.y - (player2.position.y + player2.size.y / 2)) / player2.size.y * 5.0f;
                         }
+                        
                         // Ball movement logic
                         ball.position.x += ball.speed.x;
                         ball.position.y += ball.speed.y;
@@ -310,7 +328,7 @@ int main(){
                         
                         if ((ball.position.x + ball.radius) < 0){
                             ball.position.y = player1.position.y + player1.size.y/2;
-                            ball.position.x = player1.position.x + ball.radius + 1.0f;
+                            ball.position.x = player1.position.x + player1.size.x + ball.radius + 1.0f;
                             ball.speed = (Vector2){ 0, 0 };
                             ball.active = false;
 
