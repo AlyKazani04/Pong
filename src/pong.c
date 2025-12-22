@@ -26,7 +26,7 @@ typedef struct Effect{
     Vector2 size;
     Color top;
     Color bottom;
-    int colorindex; // whos color?
+    int colorindex; // whose color?
     bool isActive;
 } Effect;
 
@@ -92,7 +92,7 @@ int main(){
     effect.position.x = 0;
     effect.size = (Vector2){ screenWidth , 5 };
     effect.isActive = false;
-    int effectStarted;
+    int effectStarted = 0;
     
     Difficulty diff = easy;
     
@@ -498,19 +498,16 @@ int main(){
                     } 
                     break;
                 case credits:
-                    DrawTextEx( font[0], "CREDITS", (Vector2){ (screenWidth/2)-85, (screenHeight/2)-50 }, 40, 4, RAYWHITE);
-                    DrawTextEx(font[0], "ALY", (Vector2){ (screenWidth/2)-40, (screenHeight/2)+30 } , 32, 4, RED);
-                    DrawTextEx(font[1], "Designer, Developer, Editor and Director", (Vector2){ (screenWidth/3)-100, (screenHeight/1.5) }, 28, 2, RED);
                     if((framecounter/30)%2 == 0){
                         DrawTextEx(font[1], "PRESS [ENTER] to go back to TITLE", (Vector2){screenWidth/2-200 , 3*screenHeight/4 + 40}, 24, 2, MAROON);
                     }
                     if(win_flag == 1){
-                        DrawTextEx( font[1], "PLAYER 1 WINS!", (Vector2){ (screenWidth/2)-130, (screenHeight/4)-20 }, 36, 2, color_arr[p1color_index]);
+                        DrawTextEx( font[1], "PLAYER 1 WINS!", (Vector2){ (screenWidth/2)-130, (screenHeight/4) }, 36, 2, color_arr[p1color_index]);
                     }
                     else{
                         if(win_flag == 0)
                             break;
-                        DrawTextEx(font[1], "PLAYER 2 WINS!", (Vector2){ (screenWidth/2)-130, (screenHeight/4)-20 }, 36, 2, color_arr[p2color_index]);
+                        DrawTextEx(font[1], "PLAYER 2 WINS!", (Vector2){ (screenWidth/2)-130, (screenHeight/4) }, 36, 2, color_arr[p2color_index]);
                     }
                     
                     break;
