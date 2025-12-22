@@ -195,8 +195,16 @@ int main(){
                 break;
             case game:
                 framecounter++;
-                if(!gamepaused){
-                    
+                
+                if(gamepaused){
+                    if(IsKeyPressed(KEY_P)){
+                        gamepaused = false;
+                    }
+                }
+                else{
+                    if(IsKeyPressed(KEY_P)){
+                        gamepaused = true;
+                    }
                     //player1 move
                     if (IsKeyDown(KEY_S)) player1.position.y += player1.speed.y;
                     if (IsKeyDown(KEY_W)) player1.position.y -= player1.speed.y;
@@ -387,6 +395,8 @@ int main(){
                     DrawTextEx(font[1], "Player 2", (Vector2){ (3*screenWidth/4-70), (screenHeight/3+30) }, 28, 2, BLUE);
                     DrawTextEx(font[1], "UP Arrow Key = UP", (Vector2){ (3*screenWidth/4-140), (screenHeight/2+30) }, 28, 2, BLUE);
                     DrawTextEx(font[1], "DOWN Arrow Key = DOWN", (Vector2){ (3*screenWidth/4-180), (screenHeight/2+60) }, 28, 2, BLUE);
+                    DrawTextEx(font[1], "SPACE to SERVE the BALL", (Vector2){screenWidth / 2 - (MeasureText("SPACE to SERVE the BALL", 24) / 2) , 3*screenHeight/4 }, 24, 2, MAROON);
+                    DrawTextEx(font[1], "P to PAUSE the GAME", (Vector2){screenWidth / 2 - (MeasureText("P to PAUSE the GAME", 24) / 2) , 3*screenHeight/4 + 40}, 24, 2, MAROON);
                     break;
                 case mode:
                     DrawTextEx( font[0], "Choose Mode", (Vector2){ (screenWidth/3), (screenHeight/5) }, 50, 4, MAROON);
@@ -463,6 +473,10 @@ int main(){
                     }
                     for (int i = player2.lifes; i > 0; i--){
                         DrawRectangle(screenWidth - (20 + 40*i), screenHeight - 30, 35, 10, LIGHTGRAY);
+                    }
+                    if(gamepaused && (framecounter / 30) % 2 == 0)
+                    {
+                        DrawTextEx(font[1], "PAUSED", (Vector2){ (screenWidth/2)-70, (screenHeight/2)-20 }, 40, 4, RAYWHITE);
                     } 
                     break;
                 case credits:
