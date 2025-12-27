@@ -26,7 +26,7 @@ typedef struct Effect{
     Vector2 size;
     Color top;
     Color bottom;
-    int colorindex; // whos color?
+    int colorindex; // whose color?
     bool isActive;
 } Effect;
 
@@ -38,6 +38,7 @@ int main(){
     
     InitWindow(screenWidth, screenHeight, "Project: Pong");
     InitAudioDevice();
+    // SetWindowState(FLAG_WINDOW_UNDECORATED);
     
     GameScreen screen = title;
     
@@ -91,7 +92,7 @@ int main(){
     effect.position.x = 0;
     effect.size = (Vector2){ screenWidth , 5 };
     effect.isActive = false;
-    int effectStarted;
+    int effectStarted = 0;
     
     Difficulty diff = easy;
     
@@ -269,6 +270,12 @@ int main(){
                         // Collision logic: ball vs screen-limits
                         if ((ball.position.y - ball.radius) <= 0 || (ball.position.y + ball.radius) >= screenHeight){
                             ball.speed.y *= -1;
+                            if(ball.position.y - ball.radius <= 0){
+                                ball.position.y = ball.radius + 1.0f; // clamp inside
+                            }
+                            if(ball.position.y + ball.radius >= screenHeight){
+                                ball.position.y = screenHeight - ball.radius - 1.0f; // clamp inside
+                            }
                             // effect logic
                             if(ball.speed.x > 0) effect.colorindex = p1color_index;
                             if(ball.speed.x < 0) effect.colorindex = p2color_index;
@@ -285,15 +292,26 @@ int main(){
                             effectStarted = 0;
                         }
                         
-                        // Collision logic: ball vs player
-                        if (CheckCollisionCircleRec( ball.position, ball.radius, player1.bounds)){
+                        // Collision logic: ball vs players
+                        if( (ball.speed.x < 0) && 
+                            (ball.position.x - ball.radius <= player1.position.x + player1.size.x) &&
+                            (ball.position.x > player1.position.x) &&
+                            (ball.position.y + ball.radius >= player1.position.y) &&
+                            (ball.position.y - ball.radius <= player1.position.y + player1.size.y) ){
                             ball.speed.x *= -1.03;
-                            ball.speed.y = (ball.position.y - (player1.position.y + player1.size.y/2))/player1.size.y*5.0f;
+                            ball.position.x = player1.position.x + player1.size.x + ball.radius + 1.0f; // clamp inside
+                            ball.speed.y = (ball.position.y - (player1.position.y + player1.size.y/2))/player1.size.y * 5.0f;
                         }
-                        if (CheckCollisionCircleRec( ball.position, ball.radius, player2.bounds)){
+                        if( (ball.speed.x > 0) && 
+                            (ball.position.x + ball.radius >= player2.position.x) &&
+                            (ball.position.x < player2.position.x) &&
+                            (ball.position.y + ball.radius >= player2.position.y) &&
+                            (ball.position.y - ball.radius <= player2.position.y + player2.size.y) ){
                             ball.speed.x *= -1.03;
-                            ball.speed.y = (ball.position.y - (player2.position.y + player2.size.y/2))/player2.size.y*5.0f;
+                            ball.position.x = player2.position.x - ball.radius - 1.0f; // clamp inside
+                            ball.speed.y = (ball.position.y - (player2.position.y + player2.size.y / 2)) / player2.size.y * 5.0f;
                         }
+                        
                         // Ball movement logic
                         ball.position.x += ball.speed.x;
                         ball.position.y += ball.speed.y;
@@ -310,7 +328,7 @@ int main(){
                         
                         if ((ball.position.x + ball.radius) < 0){
                             ball.position.y = player1.position.y + player1.size.y/2;
-                            ball.position.x = player1.position.x + ball.radius + 1.0f;
+                            ball.position.x = player1.position.x + player1.size.x + ball.radius + 1.0f;
                             ball.speed = (Vector2){ 0, 0 };
                             ball.active = false;
 
@@ -480,19 +498,16 @@ int main(){
                     } 
                     break;
                 case credits:
-                    DrawTextEx( font[0], "CREDITS", (Vector2){ (screenWidth/2)-85, (screenHeight/2)-50 }, 40, 4, RAYWHITE);
-                    DrawTextEx(font[0], "ALY", (Vector2){ (screenWidth/2)-40, (screenHeight/2)+30 } , 32, 4, RED);
-                    DrawTextEx(font[1], "Designer, Developer, Editor and Director", (Vector2){ (screenWidth/3)-100, (screenHeight/1.5) }, 28, 2, RED);
                     if((framecounter/30)%2 == 0){
                         DrawTextEx(font[1], "PRESS [ENTER] to go back to TITLE", (Vector2){screenWidth/2-200 , 3*screenHeight/4 + 40}, 24, 2, MAROON);
                     }
                     if(win_flag == 1){
-                        DrawTextEx( font[1], "PLAYER 1 WINS!", (Vector2){ (screenWidth/2)-130, (screenHeight/4)-20 }, 36, 2, color_arr[p1color_index]);
+                        DrawTextEx( font[1], "PLAYER 1 WINS!", (Vector2){ (screenWidth/2)-130, (screenHeight/4) }, 36, 2, color_arr[p1color_index]);
                     }
                     else{
                         if(win_flag == 0)
                             break;
-                        DrawTextEx(font[1], "PLAYER 2 WINS!", (Vector2){ (screenWidth/2)-130, (screenHeight/4)-20 }, 36, 2, color_arr[p2color_index]);
+                        DrawTextEx(font[1], "PLAYER 2 WINS!", (Vector2){ (screenWidth/2)-130, (screenHeight/4) }, 36, 2, color_arr[p2color_index]);
                     }
                     
                     break;
