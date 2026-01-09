@@ -39,17 +39,7 @@ Use clear, concise names written in lowercase and separated by hyphens if needed
 - **Graphics Library:** raylib  
 - **Platform:** Windows (current development environment)
 
-The project is developed using **VS Code**, and the following flags are used to build the executable (`pong.exe`) via `tasks.json`:
-
-```bash
--g
-${file}
--o ${fileDirname}\pong.exe
--lraylib
--lopengl32
--lgdi32
--lwinmm
-```
+The project is developed using **VS Code**, and the flags to build the executable (`pong.exe`) are explained in the `README.md` file.
 
 ## Make sure:
 - raylib is properly installed and linked
