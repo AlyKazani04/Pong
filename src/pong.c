@@ -43,8 +43,8 @@ int main(){
     GameScreen screen = title;
     
     Font font[2] = { 0 };
-    font[0] = LoadFont("../resources/fonts/pixantiqua.png");
-    font[1] = LoadFont("../resources/fonts/alagard.png");
+    font[0] = LoadFont("resources/fonts/pixantiqua.png");
+    font[1] = LoadFont("resources/fonts/alagard.png");
     
     Color color_arr[5] = {RED, YELLOW, GREEN, BLUE, VIOLET};
     
@@ -381,8 +381,8 @@ int main(){
                         }
                     }
                 }
-                if (IsKeyPressed(KEY_ENTER))
-                    screen = credits;
+                // if (IsKeyPressed(KEY_ENTER))
+                //     screen = credits;
                 break;
             case credits:
                 framecounter++;
@@ -502,12 +502,14 @@ int main(){
                         DrawTextEx(font[1], "PRESS [ENTER] to go back to TITLE", (Vector2){screenWidth/2-200 , 3*screenHeight/4 + 40}, 24, 2, MAROON);
                     }
                     if(win_flag == 1){
-                        DrawTextEx( font[1], "PLAYER 1 WINS!", (Vector2){ (screenWidth/2)-130, (screenHeight/4) }, 36, 2, color_arr[p1color_index]);
+                        Vector2 textSize = MeasureTextEx(font[1], "PLAYER 1 WINS!", 48, 2);
+                        DrawTextEx( font[1], "PLAYER 1 WINS!", (Vector2){ screenWidth/2 - textSize.x/2, screenHeight/2 - textSize.y/2 }, 48, 2, color_arr[p1color_index]);
                     }
                     else{
                         if(win_flag == 0)
                             break;
-                        DrawTextEx(font[1], "PLAYER 2 WINS!", (Vector2){ (screenWidth/2)-130, (screenHeight/4) }, 36, 2, color_arr[p2color_index]);
+                        Vector2 textSize = MeasureTextEx(font[1], "PLAYER 2 WINS!", 48, 2);
+                        DrawTextEx(font[1], "PLAYER 2 WINS!", (Vector2){ screenWidth/2 - textSize.x/2, screenHeight/2 - textSize.y/2 }, 48, 2, color_arr[p2color_index]);
                     }
                     
                     break;
